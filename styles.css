@@ -1,3 +1,10 @@
+body {
+    font-family: 'Courier New', monospace;
+    background-color: #1a1a1a;
+    color: #e0e0e0;
+    line-height: 1.6;
+}
+
 .hero-section {
     background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
     padding: 60px 20px;
@@ -13,13 +20,11 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(255, 255, 255, 0.03) 2px,
-        rgba(255, 255, 255, 0.03) 4px
-    );
+    background: repeating-linear-gradient(0deg,
+            transparent,
+            transparent 2px,
+            rgba(255, 255, 255, 0.03) 2px,
+            rgba(255, 255, 255, 0.03) 4px);
     pointer-events: none;
 }
 
@@ -45,7 +50,7 @@
 /* SCP-9000 Inspired Navigation Bar */
 .navbar {
     background: linear-gradient(180deg, #2d2d2d, #1f1f1f);
-    border-top: 3px solid #dc3545;
+    border-top: 3px solid #3446eb;
     border-bottom: 1px solid #404040;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
     position: sticky;
@@ -67,7 +72,7 @@
 .nav-logo {
     font-size: 1.5rem;
     font-weight: bold;
-    color: #dc3545;
+    color: #3446eb;
     text-decoration: none;
     letter-spacing: 1px;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
@@ -100,9 +105,9 @@
 }
 
 .nav-link:hover {
-    color: #dc3545;
-    background: rgba(220, 53, 69, 0.1);
-    text-shadow: 0 0 8px rgba(220, 53, 69, 0.5);
+    color: #3446eb;
+    background: rgba(52, 70, 235, 0.1);
+    text-shadow: 0 0 8px rgba(52, 70, 235, 0.5);
 }
 
 .nav-link::after {
@@ -112,7 +117,7 @@
     left: 50%;
     width: 0;
     height: 2px;
-    background: #dc3545;
+    background: #3446eb;
     transition: all 0.3s ease;
     transform: translateX(-50%);
 }
@@ -122,8 +127,8 @@
 }
 
 .nav-link.active {
-    color: #dc3545;
-    background: rgba(220, 53, 69, 0.15);
+    color: #3446eb;
+    background: rgba(52, 70, 235, 0.15);
 }
 
 .nav-link.active::after {
@@ -157,13 +162,12 @@
     left: 0;
     right: 0;
     height: 1px;
-    background: linear-gradient(90deg, 
-        transparent, 
-        rgba(220, 53, 69, 0.5) 20%, 
-        rgba(220, 53, 69, 0.8) 50%, 
-        rgba(220, 53, 69, 0.5) 80%, 
-        transparent
-    );
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(52, 70, 235, 0.5) 20%,
+            rgba(52, 70, 235, 0.8) 50%,
+            rgba(52, 70, 235, 0.5) 80%,
+            transparent);
 }
 
 /* Dropdown Menu Styles */
@@ -192,7 +196,7 @@
     left: 0;
     background: linear-gradient(180deg, #2d2d2d, #1f1f1f);
     border: 1px solid #404040;
-    border-top: 2px solid #dc3545;
+    border-top: 2px solid #3446eb;
     border-radius: 0 0 8px 8px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7);
     min-width: 250px;
@@ -225,8 +229,49 @@
 }
 
 .dropdown-link:hover {
-    background: rgba(220, 53, 69, 0.1);
-    color: #dc3545;
-    border-left: 3px solid #dc3545;
-    text-shadow: 0 0 8px rgba(220, 53, 69, 0.5);
+    background: rgba(52, 70, 235, 0.1);
+    color: #3446eb;
+    border-left: 3px solid #3446eb;
+    text-shadow: 0 0 8px rgba(52, 70, 235, 0.5);
 }
+
+.content {
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.content h2 {
+    color: #3446eb;
+    margin-bottom: 20px;
+    margin-top: 30px;
+    font-size: 2rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.content h2:first-child {
+    margin-top: 0;
+}
+
+.content h3 {
+    color: #f0f0f0;
+    margin-bottom: 15px;
+    font-size: 1.3rem;
+    letter-spacing: 0.5px;
+}
+
+.content p {
+    line-height: 1.8;
+    margin-bottom: 20px;
+    color: #c0c0c0;
+    font-size: 1rem;
+}
+
+    .content {
+        padding: 20px 15px;
+    }
+
+    .content h2 {
+        font-size: 1.5rem;
+    }
