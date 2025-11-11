@@ -1,6 +1,6 @@
 # Portfolio Repository
 
-Dit portfolio is speciaal opgesteld ter ondersteuning van sollicitaties voor stageplaatsen binnen mijn opleiding softwareontwikkeling. Het dient als centrale plek waar ik mijn werk, vaardigheden en groei presenteer. De inhoud is ontwikkeld met behulp van Visual Studio Code en bestaat uit meerdere pagina's waarop verschillende aspecten van mijn profiel worden toegelicht.
+Dit portfolio dient als centrale plek waar ik mijn werk, vaardigheden en groei presenteer. De inhoud is ontwikkeld met behulp van Visual Studio Code en bestaat uit meerdere pagina's waarop verschillende aspecten van mijn profiel worden toegelicht.
 
 ## Inhoud
 
