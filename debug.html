@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Pages Debug</title>
+    
+    <!-- Test the exact path format -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            background: #f0f0f0;
+        }
+        .debug-info {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 4px solid #007acc;
+        }
+        .error {
+            background: #ffe6e6;
+            border-left-color: #dc3545;
+        }
+        .success {
+            background: #e6ffe6;
+            border-left-color: #28a745;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>🐛 GitHub Pages Debug Information</h1>
+    
+    <div class="debug-info">
+        <h3>📍 Current Location</h3>
+        <p><strong>Full URL:</strong> <code id="full-url"></code></p>
+        <p><strong>Pathname:</strong> <code id="pathname"></code></p>
+        <p><strong>Expected Base:</strong> <code id="expected-base"></code></p>
+    </div>
+    
+    <div class="debug-info">
+        <h3>🎨 CSS Status</h3>
+        <p id="css-status">Checking CSS load status...</p>
+    </div>
+    
+    <div class="debug-info">
+        <h3>📁 File Structure Check</h3>
+        <p>✅ <code>index.html</code> - This file</p>
+        <p>✅ <code>styles.css</code> - <span id="css-file-status">Checking...</span></p>
+        <p>✅ <code>index.js</code> - <span id="js-file-status">Checking...</span></p>
+    </div>
+    
+    <div class="debug-info">
+        <h3>🔧 GitHub Pages Configuration Checklist</h3>
+        <ol>
+            <li>Repository is <strong>public</strong> (not private)</li>
+            <li>GitHub Pages enabled in Settings → Pages</li>
+            <li>Source branch set to <strong>main</strong> or <strong>master</strong></li>
+            <li>Files pushed to the correct branch</li>
+            <li>Waited 5-10 minutes after pushing changes</li>
+        </ol>
+    </div>
+    
+    <div class="debug-info" id="solution-box">
+        <h3>💡 Solution</h3>
+        <p id="solution-text">Analyzing your setup...</p>
+    </div>
+
+    <script>
+        // Display current URL information
+        const fullUrl = window.location.href;
+        const pathname = window.location.pathname;
+        
+        document.getElementById('full-url').textContent = fullUrl;
+        document.getElementById('pathname').textContent = pathname;
+        
+        // Extract expected base path
+        const pathParts = pathname.split('/').filter(part => part);
+        let expectedBase = '/';
+        
+        if (pathParts.length > 1) {
+            // Likely GitHub Pages subdirectory
+            expectedBase = '/' + pathParts[0] + '/' + pathParts[1] + '/';
+        } else if (pathParts.length === 1) {
+            expectedBase = '/' + pathParts[0] + '/';
+        }
+        
+        document.getElementById('expected-base').textContent = expectedBase;
+        
+        // Check CSS status
+        const cssLink = document.querySelector('link[href="styles.css"]');
+        let cssStatus = document.getElementById('css-status');
+        
+        setTimeout(() => {
+            try {
+                if (cssLink && cssLink.sheet) {
+                    cssStatus.innerHTML = '✅ <strong>CSS is loading correctly!</strong> The stylesheet is being applied.';
+                    cssStatus.parentElement.className = 'debug-info success';
+                } else {
+                    cssStatus.innerHTML = '❌ <strong>CSS not loading</strong>. This is likely the issue.';
+                    cssStatus.parentElement.className = 'debug-info error';
+                }
+            } catch (e) {
+                cssStatus.innerHTML = '❌ <strong>CSS check failed:</strong> ' + e.message;
+                cssStatus.parentElement.className = 'debug-info error';
+            }
+        }, 1000);
+        
+        // Check if files exist (basic test)
+        async function checkFiles() {
+            const files = ['styles.css', 'index.js'];
+            
+            for (const file of files) {
+                try {
+                    const response = await fetch(file, { method: 'HEAD' });
+                    const statusElement = document.getElementById(file.replace('.', '-') + '-status');
+                    
+                    if (response.ok) {
+                        statusElement.textContent = '✅ Found';
+                    } else {
+                        statusElement.textContent = '❌ Not found (' + response.status + ')';
+                    }
+                } catch (error) {
+                    const statusElement = document.getElementById(file.replace('.', '-') + '-status');
+                    statusElement.textContent = '❌ Error checking';
+                }
+            }
+        }
+        
+        checkFiles();
+        
+        // Provide solution based on findings
+        setTimeout(() => {
+            const solutionBox = document.getElementById('solution-box');
+            const solutionText = document.getElementById('solution-text');
+            
+            if (pathname.includes('localhost')) {
+                solutionText.innerHTML = `
+                    <strong>Local Testing Mode:</strong><br>
+                    This page is running locally. To test on GitHub Pages:<br>
+                    1. Push all files to your GitHub repository<br>
+                    2. Enable GitHub Pages in Settings → Pages<br>
+                    3. Visit your GitHub Pages URL<br>
+                    4. Check if the CSS loads there
+                `;
+            } else if (expectedBase !== '/') {
+                solutionText.innerHTML = `
+                    <strong>GitHub Pages Subdirectory Detected!</strong><br>
+                    Your site is served from: <code>${expectedBase}</code><br>
+                    <strong>Fix:</strong> Update your HTML files to use absolute paths:<br>
+                    Change: <code>href="styles.css"</code><br>
+                    To: <code>href="${expectedBase}styles.css"</code>
+                `;
+                solutionBox.className = 'debug-info error';
+            } else {
+                solutionText.innerHTML = `
+                    <strong>Root Domain Detected</strong><br>
+                    Your paths should work as-is. Check these issues:<br>
+                    1. Repository Settings → Pages → Source branch<br>
+                    2. Repository must be PUBLIC<br>
+                    3. Files must be in the root directory<br>
+                    4. Wait 5-10 minutes after pushing
+                `;
+            }
+        }, 1500);
+    </script>
+</body>
+</html>

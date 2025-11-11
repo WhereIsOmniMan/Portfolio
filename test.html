@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GitHub Pages Test</title>
+    
+    <!-- Test different path styles -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="/styles.css">
+    
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-box { border: 2px solid #333; padding: 20px; margin: 10px 0; }
+        .success { background: #d4edda; border-color: #28a745; }
+        .error { background: #f8d7da; border-color: #dc3545; }
+    </style>
+</head>
+<body>
+    <h1>GitHub Pages Path Testing</h1>
+    
+    <div class="test-box">
+        <h2>Current Page Info</h2>
+        <p><strong>Current URL:</strong> <span id="current-url"></span></p>
+        <p><strong>Base Path:</strong> <span id="base-path"></span></p>
+        <p><strong>CSS Loaded:</strong> <span id="css-status">Testing...</span></p>
+    </div>
+    
+    <div class="test-box">
+        <h2>Path Tests</h2>
+        <p><code>href="styles.css"</code> - <span id="test1">Testing...</span></p>
+        <p><code>href="./styles.css"</code> - <span id="test2">Testing...</span></p>
+        <p><code>href="/styles.css"</code> - <span id="test3">Testing...</span></p>
+    </div>
+    
+    <div class="test-box">
+        <h2>Solution</h2>
+        <p id="solution">Analyzing...</p>
+    </div>
+
+    <script>
+        // Get current URL info
+        const currentUrl = window.location.href;
+        const basePath = window.location.pathname;
+        document.getElementById('current-url').textContent = currentUrl;
+        document.getElementById('base-path').textContent = basePath;
+        
+        // Check if CSS loaded
+        const cssLoaded = document.querySelector('link[href="styles.css"]').sheet;
+        document.getElementById('css-status').textContent = cssLoaded ? '✅ SUCCESS' : '❌ FAILED';
+        document.getElementById('css-status').className = cssLoaded ? 'success' : 'error';
+        
+        // Test different path approaches
+        const testResults = [
+            { id: 'test1', path: 'styles.css', success: !!document.querySelector('link[href="styles.css"]').sheet },
+            { id: 'test2', path: './styles.css', success: !!document.querySelector('link[href="./styles.css"]').sheet },
+            { id: 'test3', path: '/styles.css', success: !!document.querySelector('link[href="/styles.css"]').sheet }
+        ];
+        
+        testResults.forEach(result => {
+            const element = document.getElementById(result.id);
+            element.textContent = result.success ? '✅ WORKS' : '❌ FAILS';
+            element.className = result.success ? 'success' : 'error';
+        });
+        
+        // Provide solution
+        const workingPath = testResults.find(r => r.success);
+        const solution = document.getElementById('solution');
+        
+        if (workingPath) {
+            solution.innerHTML = `
+                <strong>✅ Solution Found!</strong><br>
+                Use: <code>href="${workingPath.path}"</code> in your HTML files.<br>
+                Update all your HTML files to use this path format.
+            `;
+            solution.className = 'success';
+        } else {
+            solution.innerHTML = `
+                <strong>❌ No working path found</strong><br>
+                Try these solutions:<br>
+                1. Check if styles.css is in the same folder as your HTML files<br>
+                2. Check GitHub Pages settings in your repository<br>
+                3. Ensure repository is public (not private)<br>
+                4. Wait 5-10 minutes after pushing changes
+            `;
+            solution.className = 'error';
+        }
+    </script>
+</body>
+</html>
