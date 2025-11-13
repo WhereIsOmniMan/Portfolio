@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project 1 | Password Generator</title>
+    <link rel="stylesheet" href="styles_pj1.css">
+</head>
+
+<body>
+    <div class="password-generator-container">
+        <h1>Password Generator</h1>
+
+        <div class="password-display">
+            <span class="password-text">SQ0||tSg6@MF</span>
+            <button class="copy-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
+                </svg>
+
+                <span class="tooltip">Copied!</span>
+            </button>
+        </div>
+
+        <div class="strength-text">Strength: Strong</div>
+        <div class="strength-meter">
+            <div id="strengthMeter" class="strength-meter-fill"></div>
+        </div>
+
+        <div class="password-options">
+            <div class="option-item">
+                <label for="lengthSlider">Password length: </label>
+                <span id="lengthValue" class="length-value">12</span>
+            </div>
+
+            <input id="lengthSlider" type="range" min="4" max="32" value="12">
+
+            <div class="option-item">
+                <label for="uppercaseCheck">Include Uppercase</label>
+                <input type="checkbox" checked id="uppercaseCheck">
+            </div>
+
+            <div class="option-item">
+                <label for="lowercaseCheck">Include Lowercase</label>
+                <input type="checkbox" checked id="lowercaseCheck">
+            </div>
+
+            <div class="option-item">
+                <label for="numbersCheck">Include Numbers</label>
+                <input type="checkbox" checked id="numbersCheck">
+            </div>
+
+            <div class="option-item">
+                <label for="symbolsCheck">Include Symbols</label>
+                <input type="checkbox" checked id="symbolsCheck">
+            </div>
+        </div>
+
+        <button class="generate-btn">Generate Password</button>
+    </div>
+    <script src="main_pj1.js"></script>
+</body>
+
+</html>
