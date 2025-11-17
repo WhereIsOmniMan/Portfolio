@@ -16,6 +16,9 @@
     --shadow-accent: rgba(52, 70, 235, 0.2);
     --shadow-text: rgba(0, 0, 0, 0.7);
     --grid-overlay: rgba(255, 255, 255, 0.03);
+    --HTML-styling: #e55328;
+    --CSS-styling: #264de4;
+    --JS-styling: #d4b830;
 }
 
 body.light-theme {
@@ -37,6 +40,9 @@ body.light-theme {
     --shadow-text: rgba(0, 0, 0, 0.3);
     --shadow-accent: rgba(37, 99, 235, 0.3);
     --grid-overlay: rgba(0, 0, 0, 0.02);
+    --HTML-styling: #e55328;
+    --CSS-styling: #264de4;
+    --JS-styling: #d4b830;
 }
 
 /* Theme Toggle Button */
@@ -83,6 +89,10 @@ body {
     color: var(--text-primary);
     line-height: 1.6;
     transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body a.link {
+    color: #3446eb;
 }
 
 .hero-section {
@@ -504,4 +514,33 @@ body {
     .content p {
         font-size: 0.95rem;
     }
+}
+
+/* Projects Styling */
+.classification-box h4.HTML-styling {
+        color: var(--HTML-styling);
+}
+.classification-box h4.CSS-styling {
+        color: var(--CSS-styling);
+}
+.classification-box h4.JS-styling {
+        color: var(--JS-styling);
+}
+
+
+/* Technology Images Styling */
+.technologies-images {
+    width: 35px;
+    height: 35px;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+.technologies-images.htmlimage {
+    filter: brightness(0) saturate(100%) invert(37%) sepia(87%) saturate(1940%) hue-rotate(348deg) brightness(94%) contrast(89%);
+}
+.technologies-images.cssimage {
+    filter: brightness(0) saturate(100%) invert(19%) sepia(98%) saturate(3552%) hue-rotate(230deg) brightness(93%) contrast(91%);
+}
+.technologies-images.javascriptimage {
+    filter: brightness(0) saturate(100%) invert(74%) sepia(22%) saturate(1315%) hue-rotate(8deg) brightness(96%) contrast(87%);
 }

@@ -6,34 +6,38 @@
 }
 
 body {
-    background-color: #f0f2f5;
+    background: linear-gradient(135deg, #2a2a2a, #1a1a1a);;
     display: flex;
     align-items: center;
     justify-content: center;
     min-height: 100vh;
-    padding: 20px;
+    padding: 60px 20px;
+    position: relative;
+    overflow: hidden;
 }
 
 .password-generator-container {
-    background-color: #ffffff;
-    padding: 30px;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, var(--grid-overlay) 2px, var(--grid-overlay) 4px);
+    background: linear-gradient(135deg, #2a2a2a, #1a1a1a);;
+    padding: 60px 20px;
+    position: center;
     border-radius: 10px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 20px rgba(52, 70, 235, 0.1);
     max-width: 500px;
     width: 100%;
 }
 
 h1 {
     text-align: center;
-    color: #333333;
+    color: rgb(52, 70, 235);
     margin-bottom: 24px;
     font-size: 32px;
 }
 
 .password-display {
-    background-color: #f7f7f7;
+    background-color: linear-gradient(135deg, #2a2a2a, #1a1a1a);;
     padding: 15px;
-    border: 1px solid #dddddd;
+    border: 1px solid rgb(52, 70, 235);
     border-radius: 6px;
     margin-bottom: 20px;
     display: flex;
@@ -46,7 +50,8 @@ h1 {
 .password-text {
     font-family: monospace;
     font-size: 18px;
-    color: #333333;
+    color: rgb(52, 70, 235);
+    overflow: hidden;
 }
 
 .copy-btn {
@@ -58,6 +63,7 @@ h1 {
 .copy-btn svg {
     width: 20px;
     height: 20px;
+    filter: brightness(0) saturate(100%) invert(22%) sepia(97%) saturate(3785%) hue-rotate(234deg) brightness(93%) contrast(98%);
 }
 
 .strength-text {
@@ -65,6 +71,7 @@ h1 {
     font-weight: bold;
     margin-bottom: 5px;
     font-size: 14px;
+    color:rgb(52, 70, 235);
 }
 
 .strength-meter {
@@ -94,12 +101,12 @@ h1 {
 
 .option-item label {
     font-size: 16px;
-    color: #555555;
+    color:rgb(52, 70, 235);
 }
 
 .length-value {
     font-weight: bold;
-    color: #333333;
+    color: rgb(52, 70, 235);
 }
 
 input[type="range"] {
@@ -124,14 +131,14 @@ input[type="range"]::-webkit-slider-thumb {
 input[type="checkbox"] {
     width: 18px;
     height: 18px;
-    accent-color: #003049;
+    accent-color: rgb(52, 70, 235);
     cursor: pointer;
 }
 
 .generate-btn {
     width: 100%;
     padding: 15px;
-    background-color: #003049;
+    background-color: rgb(52, 70, 235);
     color: #ffffff;
     border-radius: 6px;
     border: none;

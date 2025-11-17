@@ -36,15 +36,15 @@
                 <span id="lengthValue" class="length-value">12</span>
             </div>
 
-            <input id="lengthSlider" type="range" min="4" max="32" value="12">
+            <input id="lengthSlider" type="range" min="4" max="256" value="12">
 
             <div class="option-item">
-                <label for="uppercaseCheck">Include Uppercase</label>
+                <label for="uppercaseCheck">Include Uppercase (Latin)</label>
                 <input type="checkbox" checked id="uppercaseCheck">
             </div>
 
             <div class="option-item">
-                <label for="lowercaseCheck">Include Lowercase</label>
+                <label for="lowercaseCheck">Include Lowercase (Latin)</label>
                 <input type="checkbox" checked id="lowercaseCheck">
             </div>
 
@@ -57,6 +57,29 @@
                 <label for="symbolsCheck">Include Symbols</label>
                 <input type="checkbox" checked id="symbolsCheck">
             </div>
+
+            <!-- Greek -->
+            <div class="option-item">
+                <label for="greek_upperCheck">Include Greek Uppercase (Α–Ω)</label>
+                <input type="checkbox" checked id="greek_upperCheck">
+            </div>
+
+            <div class="option-item">
+                <label for="greek_lowerCheck">Include Greek Lowercase (α–ω)</label>
+                <input type="checkbox" checked id="greek_lowerCheck">
+            </div>
+
+            <!-- Cyrillic -->
+            <div class="option-item">
+                <label for="cyrillic_upperCheck">Include Cyrillic Uppercase (А–Я)</label>
+                <input type="checkbox" checked id="cyrillic_upperCheck">
+            </div>
+
+            <div class="option-item">
+                <label for="cyrillic_lowerCheck">Include Cyrillic Lowercase (а–я)</label>
+                <input type="checkbox" checked id="cyrillic_lowerCheck">
+            </div>
+
         </div>
 
         <button class="generate-btn">Generate Password</button>
