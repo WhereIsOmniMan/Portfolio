@@ -1,0 +1,129 @@
+#board {
+    display: flex;
+    flex-wrap: wrap;
+    width: 640px;
+    height: 640px;
+    /* border: 1px solid black; */
+    background-color: #f0d9b5;
+    position: relative;
+}
+
+.piece {
+    width: 80px;
+    height: 80px;
+    background-size: 60%;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: absolute;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.piece:hover {
+    opacity: 0.8;
+}
+
+.piece.white {
+    filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(3738%) hue-rotate(326deg) brightness(114%) contrast(92%);
+}
+
+.piece.black {
+    filter: brightness(0) saturate(100%) invert(32%) sepia(9%) saturate(153%) hue-rotate(341deg) brightness(103%) contrast(93%);
+}
+
+.piece.pawn {
+    background-image: url("../../images/Chess-pawn.png");
+}
+
+.piece.rook {
+    background-image: url("../../images/Chess-rook.png");
+}
+
+.piece.knight {
+    background-image: url("../../images/Chess-knight.png");
+}
+
+.piece.bishop {
+    background-image: url("../../images/Chess-bishop.png");
+}
+
+.piece.queen {
+    background-image: url("../../images/Chess-queen.png");
+}
+
+.piece.king {
+    background-image: url("../../images/Chess-king.png");
+}
+
+.esquare,
+.osquare {
+    width: 80px;
+    height: 80px;
+    /* border: 1px solid black; */
+    box-sizing: border-box;
+    /* background-image: url("../../images/megadeth_white.webp"); */
+    background-size: cover;
+    background-position: center;
+}
+
+.esquare:nth-of-type(2n) {
+    background-color: #b58863;
+    /* background-image: url("../../images/megadeth_black.webp"); */
+}
+
+.osquare:nth-of-type(2n+1) {
+    background-color: #b58863;
+    /* background-image: url("../../images/megadeth_black.webp"); */
+}
+
+.selected-white {
+    background-color: #f5f682 !important;
+}
+
+.selected-black {
+    background-color: #b9ca43 !important;
+}
+
+.valid-move {
+    position: relative;
+}
+
+.valid-move::after {
+    content: '';
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+.valid-capture::after {
+    width: 70px;
+    height: 70px;
+    background-color: transparent;
+    border: 4px solid rgba(255, 0, 0, 0.5);
+    border-radius: 50%;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    /* background-image: url("../../images/shhh-dog-shhh.png"); */
+    background-size: cover;
+    background-position: center;
+    background: linear-gradient(0deg,rgba(54, 53, 49, 1) 100%, rgba(81, 80, 76, 1) 0%);
+}
+
+h3 {
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
