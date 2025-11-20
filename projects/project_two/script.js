@@ -1,5 +1,6 @@
 const board = document.getElementById('board');
 const turnIndicator = document.getElementById('turn-indicator');
+const movesList = document.getElementById('moves-list');
 let patterneven = " <div class='esquare'></div>" ;
 let patternodd = " <div class='osquare'></div>" ;
 
@@ -19,6 +20,9 @@ const step = 80;
 let selectedPiece = null;
 let currentTurn = 'white'; // 'white' or 'black'
 let lastMove = null; // For en passant tracking
+let moveHistory = [];
+let moveNumber = 1;
+let gameOver = false;
 
 // ---------------------------
 // PIECE SETUP
@@ -82,11 +86,92 @@ function getPieceAt(x, y) {
 }
 
 function updateTurnIndicator() {
-    turnIndicator.textContent = currentTurn === 'white' ? "White's Turn" : "Black's Turn";
+    const inCheck = isKingInCheck(currentTurn);
+    if (inCheck) {
+        turnIndicator.textContent = `${currentTurn === 'white' ? "White" : "Black"}'s Turn - CHECK!`;
+        turnIndicator.style.color = '#ff6b6b';
+    } else {
+        turnIndicator.textContent = currentTurn === 'white' ? "White's Turn" : "Black's Turn";
+        turnIndicator.style.color = '#ffffff';
+    }
 }
 
 function isValidPosition(x, y) {
     return x >= 0 && x < 640 && y >= 0 && y < 640;
+}
+
+function getKing(color) {
+    return pieces.find(p => p.type === 'king' && p.color === color);
+}
+
+function positionToNotation(x, y) {
+    const col = String.fromCharCode(97 + (x / step)); // a-h
+    const row = 8 - (y / step); // 1-8
+    return col + row;
+}
+
+function pieceSymbol(type) {
+    const symbols = {
+        'king': 'K',
+        'queen': 'Q',
+        'rook': 'R',
+        'bishop': 'B',
+        'knight': 'N',
+        'pawn': ''
+    };
+    return symbols[type] || '';
+}
+
+// ---------------------------
+// CHECK DETECTION
+// ---------------------------
+
+function isSquareUnderAttack(x, y, byColor) {
+    // Check if any piece of 'byColor' can attack position (x, y)
+    for (let piece of pieces) {
+        if (piece.color !== byColor || !piece.element.parentNode) continue;
+        
+        const moves = getValidMovesRaw(piece);
+        if (moves.some(m => m.x === x && m.y === y)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function isKingInCheck(kingColor) {
+    const king = getKing(kingColor);
+    if (!king) return false;
+    
+    const oppositeColor = kingColor === 'white' ? 'black' : 'white';
+    return isSquareUnderAttack(king.x, king.y, oppositeColor);
+}
+
+function wouldMoveLeaveKingInCheck(piece, newX, newY, capturedPiece = null) {
+    // Simulate the move
+    const oldX = piece.x;
+    const oldY = piece.y;
+    
+    piece.x = newX;
+    piece.y = newY;
+    
+    // Temporarily remove captured piece
+    if (capturedPiece) {
+        const capturedIndex = pieces.indexOf(capturedPiece);
+        pieces.splice(capturedIndex, 1);
+    }
+    
+    const inCheck = isKingInCheck(piece.color);
+    
+    // Undo the move
+    piece.x = oldX;
+    piece.y = oldY;
+    
+    if (capturedPiece) {
+        pieces.push(capturedPiece);
+    }
+    
+    return inCheck;
 }
 
 // ---------------------------
@@ -124,11 +209,14 @@ function getPawnMoves(piece) {
                 moves.push({ ...pos, type: 'capture', capturedPiece: targetPiece });
             }
             
-            // En passant
+            // En passant - ONLY on the immediate next turn
             if (lastMove && lastMove.isDoubleMove && lastMove.piece.type === 'pawn' && lastMove.piece.color !== piece.color) {
                 const lastPiece = lastMove.piece;
+                // The pawn must be directly beside us
                 if (lastPiece.y === piece.y && Math.abs(lastPiece.x - piece.x) === step) {
-                    if (pos.x === lastPiece.x && pos.y === lastPiece.y + direction) {
+                    // We capture to the square it "passed over"
+                    const enPassantY = lastPiece.y + (lastPiece.color === 'white' ? step : -step);
+                    if (pos.x === lastPiece.x && pos.y === enPassantY) {
                         moves.push({ ...pos, type: 'enpassant', capturedPiece: lastPiece });
                     }
                 }
@@ -228,7 +316,6 @@ function getKnightMoves(piece) {
 }
 
 function getQueenMoves(piece) {
-    // Queen moves like both rook and bishop
     return [...getRookMoves(piece), ...getBishopMoves(piece)];
 }
 
@@ -262,7 +349,8 @@ function getKingMoves(piece) {
     return moves;
 }
 
-function getValidMoves(piece) {
+function getValidMovesRaw(piece) {
+    // Get moves without checking for leaving king in check
     switch (piece.type) {
         case 'pawn': return getPawnMoves(piece);
         case 'rook': return getRookMoves(piece);
@@ -272,6 +360,15 @@ function getValidMoves(piece) {
         case 'king': return getKingMoves(piece);
         default: return [];
     }
+}
+
+function getValidMoves(piece) {
+    const rawMoves = getValidMovesRaw(piece);
+    
+    // Filter out moves that would leave king in check
+    return rawMoves.filter(move => {
+        return !wouldMoveLeaveKingInCheck(piece, move.x, move.y, move.capturedPiece);
+    });
 }
 
 function highlightValidMoves(piece) {
@@ -287,9 +384,85 @@ function highlightValidMoves(piece) {
     });
 }
 
+function highlightCheck() {
+    // Clear previous check highlights
+    squares.forEach(square => square.classList.remove('in-check'));
+    
+    // Highlight king if in check
+    if (isKingInCheck(currentTurn)) {
+        const king = getKing(currentTurn);
+        const squareIndex = getSquareIndex(king.x, king.y);
+        squares[squareIndex].classList.add('in-check');
+    }
+}
+
+function checkForCheckmate() {
+    if (!isKingInCheck(currentTurn)) return false;
+    
+    // Check if any piece has any legal moves
+    for (let piece of pieces) {
+        if (piece.color === currentTurn && piece.element.parentNode) {
+            const moves = getValidMoves(piece);
+            if (moves.length > 0) {
+                return false; // At least one legal move exists
+            }
+        }
+    }
+    
+    return true; // No legal moves - checkmate!
+}
+
+function endGame(winner) {
+    gameOver = true;
+    
+    const overlay = document.createElement('div');
+    overlay.id = 'game-over-overlay';
+    
+    const message = document.createElement('div');
+    message.id = 'game-over-message';
+    message.innerHTML = `
+        <h2>Checkmate!</h2>
+        <p>${winner === 'white' ? 'White' : 'Black'} wins!</p>
+        <button onclick="location.reload()">New Game</button>
+    `;
+    
+    overlay.appendChild(message);
+    document.body.appendChild(overlay);
+}
+
+function addMoveToHistory(piece, fromX, fromY, toX, toY, isCapture) {
+    const notation = pieceSymbol(piece.type) + 
+                    (isCapture ? 'x' : '') + 
+                    positionToNotation(toX, toY);
+    
+    if (piece.color === 'white') {
+        const movePair = document.createElement('div');
+        movePair.className = 'move-pair';
+        movePair.innerHTML = `
+            <span class="move-number">${moveNumber}.</span>
+            <span class="move-white">${notation}</span>
+            <span class="move-black"></span>
+        `;
+        movesList.appendChild(movePair);
+    } else {
+        const lastPair = movesList.lastElementChild;
+        if (lastPair) {
+            lastPair.querySelector('.move-black').textContent = notation;
+        }
+        moveNumber++;
+    }
+    
+    // Auto-scroll to bottom
+    movesList.scrollTop = movesList.scrollHeight;
+}
+
 function movePiece(piece, newX, newY, moveData) {
+    const oldX = piece.x;
+    const oldY = piece.y;
+    const isCapture = moveData.type === 'capture' || moveData.type === 'enpassant';
+    
     // Handle captures
-    if (moveData.type === 'capture' || moveData.type === 'enpassant') {
+    if (isCapture) {
         const capturedPiece = moveData.capturedPiece;
         capturedPiece.element.remove();
         const index = pieces.indexOf(capturedPiece);
@@ -305,7 +478,10 @@ function movePiece(piece, newX, newY, moveData) {
     piece.element.style.top = piece.y + 'px';
     piece.hasMoved = true;
     
-    // Track last move for en passant
+    // Add to move history
+    addMoveToHistory(piece, oldX, oldY, newX, newY, isCapture);
+    
+    // Track last move for en passant (must be reset each move)
     lastMove = {
         piece: piece,
         isDoubleMove: moveData.isDoubleMove || false
@@ -314,82 +490,123 @@ function movePiece(piece, newX, newY, moveData) {
     // Switch turns
     currentTurn = currentTurn === 'white' ? 'black' : 'white';
     updateTurnIndicator();
+    highlightCheck();
+    
+    // Check for checkmate
+    if (checkForCheckmate()) {
+        const winner = currentTurn === 'white' ? 'black' : 'white';
+        endGame(winner);
+    }
     
     clearSelection();
     selectedPiece = null;
 }
 
 // ---------------------------
-// PIECE SELECTION AND MOVEMENT
+// UNIFIED CLICK HANDLER
 // ---------------------------
-pieces.forEach((piece) => {
-    piece.element.addEventListener('click', function(event) {
-        event.stopPropagation();
-        
-        // If a piece is selected, check if clicking on an enemy piece to capture
-        if (selectedPiece && selectedPiece !== piece) {
+
+document.addEventListener('click', function(event) {
+    if (gameOver) return;
+    
+    // Check if click is on board area
+    const boardRect = board.getBoundingClientRect();
+    const clickX = event.clientX - boardRect.left;
+    const clickY = event.clientY - boardRect.top;
+    
+    // If click is outside board, deselect
+    if (clickX < 0 || clickX >= 640 || clickY < 0 || clickY >= 640) {
+        if (selectedPiece) {
+            clearSelection();
+            selectedPiece = null;
+        }
+        return;
+    }
+    
+    // Convert click to grid position
+    const gridX = Math.floor(clickX / step) * step;
+    const gridY = Math.floor(clickY / step) * step;
+    
+    // Check if there's a piece at this position
+    const clickedPiece = getPieceAt(gridX, gridY);
+    
+    if (clickedPiece) {
+        // Clicked on a piece
+        if (selectedPiece && selectedPiece !== clickedPiece) {
+            // Check if it's a valid capture
             const validMoves = getValidMoves(selectedPiece);
             const captureMove = validMoves.find(m => 
-                m.x === piece.x && m.y === piece.y && 
+                m.x === gridX && m.y === gridY && 
                 (m.type === 'capture' || m.type === 'enpassant')
             );
             
             if (captureMove) {
-                movePiece(selectedPiece, piece.x, piece.y, captureMove);
+                movePiece(selectedPiece, gridX, gridY, captureMove);
                 return;
             }
-        }
-        
-        // Can only select pieces of current turn
-        if (piece.color !== currentTurn) {
+            
+            // If same color, switch selection
+            if (clickedPiece.color === currentTurn) {
+                clearSelection();
+                selectedPiece = clickedPiece;
+                
+                const squareIndex = getSquareIndex(gridX, gridY);
+                const square = squares[squareIndex];
+                
+                if (isWhiteSquare(gridX, gridY)) {
+                    square.classList.add('selected-white');
+                } else {
+                    square.classList.add('selected-black');
+                }
+                
+                highlightValidMoves(clickedPiece);
+            }
             return;
         }
         
-        // Clear previous selection
+        // Can only select pieces of current turn
+        if (clickedPiece.color !== currentTurn) {
+            return;
+        }
+        
+        // If clicking same piece, deselect
+        if (selectedPiece === clickedPiece) {
+            clearSelection();
+            selectedPiece = null;
+            return;
+        }
+        
+        // Select the piece
         clearSelection();
+        selectedPiece = clickedPiece;
         
-        // Set new selection
-        selectedPiece = piece;
-        
-        // Highlight the square
-        const squareIndex = getSquareIndex(piece.x, piece.y);
+        const squareIndex = getSquareIndex(gridX, gridY);
         const square = squares[squareIndex];
         
-        if (isWhiteSquare(piece.x, piece.y)) {
+        if (isWhiteSquare(gridX, gridY)) {
             square.classList.add('selected-white');
         } else {
             square.classList.add('selected-black');
         }
         
-        // Show valid moves
-        highlightValidMoves(piece);
-    });
-});
-
-// Click on squares to move
-squares.forEach((square, index) => {
-    square.addEventListener('click', function(event) {
-        if (!selectedPiece) return;
-        
-        const col = index % 8;
-        const row = Math.floor(index / 8);
-        const targetX = col * step;
-        const targetY = row * step;
-        
-        // Check if this is a valid move
-        const validMoves = getValidMoves(selectedPiece);
-        const validMove = validMoves.find(m => m.x === targetX && m.y === targetY);
-        
-        if (validMove) {
-            movePiece(selectedPiece, targetX, targetY, validMove);
+        highlightValidMoves(clickedPiece);
+    } else {
+        // Clicked on empty square
+        if (selectedPiece) {
+            // Check if it's a valid move
+            const validMoves = getValidMoves(selectedPiece);
+            const validMove = validMoves.find(m => m.x === gridX && m.y === gridY);
+            
+            if (validMove) {
+                movePiece(selectedPiece, gridX, gridY, validMove);
+            } else {
+                // Invalid square clicked, deselect
+                clearSelection();
+                selectedPiece = null;
+            }
         }
-    });
-});
-
-// Click on board to deselect
-board.addEventListener('click', function(event) {
-    if (event.target === board) {
-        clearSelection();
-        selectedPiece = null;
     }
 });
+
+// Initial check highlight
+highlightCheck();

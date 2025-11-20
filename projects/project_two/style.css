@@ -4,7 +4,7 @@
     width: 640px;
     height: 640px;
     /* border: 1px solid black; */
-    background-color: #f0d9b5;
+    background-color: #edd6b0;
     position: relative;
 }
 
@@ -17,6 +17,7 @@
     position: absolute;
     cursor: pointer;
     transition: opacity 0.2s;
+    z-index: 10;
 }
 
 .piece:hover {
@@ -24,35 +25,35 @@
 }
 
 .piece.white {
-    filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(3738%) hue-rotate(326deg) brightness(114%) contrast(92%);
+    filter: brightness(0) invert(1);
 }
 
 .piece.black {
-    filter: brightness(0) saturate(100%) invert(32%) sepia(9%) saturate(153%) hue-rotate(341deg) brightness(103%) contrast(93%);
+    filter: brightness(0);
 }
 
 .piece.pawn {
-    background-image: url("../../images/Chess-pawn.png");
+    background-image: url("../../images/pawn.png");
 }
 
 .piece.rook {
-    background-image: url("../../images/Chess-rook.png");
+    background-image: url("../../images/rook.png");
 }
 
 .piece.knight {
-    background-image: url("../../images/Chess-knight.png");
+    background-image: url("../../images/knight.png");
 }
 
 .piece.bishop {
-    background-image: url("../../images/Chess-bishop.png");
+    background-image: url("../../images/bishop.png");
 }
 
 .piece.queen {
-    background-image: url("../../images/Chess-queen.png");
+    background-image: url("../../images/queen.png");
 }
 
 .piece.king {
-    background-image: url("../../images/Chess-king.png");
+    background-image: url("../../images/king.png");
 }
 
 .esquare,
@@ -67,12 +68,12 @@
 }
 
 .esquare:nth-of-type(2n) {
-    background-color: #b58863;
+    background-color: #b88762;
     /* background-image: url("../../images/megadeth_black.webp"); */
 }
 
 .osquare:nth-of-type(2n+1) {
-    background-color: #b58863;
+    background-color: #b88762;
     /* background-image: url("../../images/megadeth_black.webp"); */
 }
 
@@ -82,6 +83,16 @@
 
 .selected-black {
     background-color: #b9ca43 !important;
+}
+
+.in-check {
+    background-color: #ff6b6b !important;
+    animation: checkPulse 1s infinite;
+}
+
+@keyframes checkPulse {
+    0%, 100% { background-color: #ff6b6b; }
+    50% { background-color: #ff4444; }
 }
 
 .valid-move {
@@ -109,6 +120,106 @@
     border-radius: 50%;
 }
 
+#move-history {
+    background-color: rgba(237, 214, 176, 0.9);
+    border-radius: 8px;
+    padding: 0px 15px 0px 15px;
+    width: 250px;
+    height: 640px;
+    overflow-y: auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    scrollbar-color: #edd6b0 #b88762;
+    scrollbar-width: thin;
+}
+
+#move-history h4 {
+    font-family: Arial, sans-serif;
+    color: #b88762;
+    border-bottom: 2px solid #b88762; 
+    padding-bottom: 5px;
+}
+
+#moves-list {
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    color: #b88762;
+    font-weight: bolder;
+}
+
+.move-pair {
+    display: flex;
+    margin-bottom: 5px;
+    padding: 3px 5px;
+    border-radius: 3px;
+}
+
+.move-pair:hover {
+    background-color: rgba(115, 149, 82, 0.1);
+}
+
+.move-number {
+    font-weight: bold;
+    margin-right: 10px;
+    color: #b88762;
+    min-width: 25px;
+}
+
+.move-white {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.move-black {
+    flex: 1;
+}
+
+#game-over-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+#game-over-message {
+    background-color: white;
+    padding: 40px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+#game-over-message h2 {
+    margin: 0 0 20px 0;
+    font-size: 32px;
+    color: #333;
+}
+
+#game-over-message p {
+    margin: 0 0 20px 0;
+    font-size: 18px;
+    color: #666;
+}
+
+#game-over-message button {
+    padding: 10px 30px;
+    font-size: 16px;
+    background-color: #739552;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#game-over-message button:hover {
+    background-color: #5f7d43;
+}
+
 body {
     display: flex;
     justify-content: center;
@@ -121,7 +232,7 @@ body {
     background: linear-gradient(0deg,rgba(54, 53, 49, 1) 100%, rgba(81, 80, 76, 1) 0%);
 }
 
-h3 {
+h2 {
     color: #ffffff;
     font-family: Arial, sans-serif;
     font-size: 24px;

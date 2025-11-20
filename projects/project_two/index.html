@@ -5,14 +5,19 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Chees</title>
+  <title>Chess</title>
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
   <center>
-  <h3 id="turn-indicator">White's Turn</h3>
-  <div id="board">
+  <h2 id="turn-indicator">White's Turn</h2>
+  <div style="display: flex; gap: 20px; align-items: flex-start;">
+    <div id="board"></div>
+    <div id="move-history">
+      <h4>Move History</h4>
+      <div id="moves-list"></div>
+    </div>
   </div>
   </center>
 
