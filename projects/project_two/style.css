@@ -25,11 +25,11 @@
 }
 
 .piece.white {
-    filter: brightness(0) invert(1);
+    filter: brightness(0) invert(1) drop-shadow(0 0 0.1rem black);
 }
 
 .piece.black {
-    filter: brightness(0);
+    filter: brightness(0) drop-shadow(0 0 0.1rem black);
 }
 
 .piece.pawn {
